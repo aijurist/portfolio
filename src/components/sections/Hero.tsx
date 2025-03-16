@@ -168,24 +168,31 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
           )}
         </svg>
         
-        {/* Binary code effect (subtle) */}
+        {/* UPDATED: Binary code effect (reduced, animated and more subtle) */}
         <div className="absolute inset-0 select-none pointer-events-none hidden lg:block">
-            {Array.from({length: 8}).map((_, i) => (
-                <div 
-                key={`binary-${i}`}
-                className="absolute text-xs"
-                style={{
-                    top: `${Math.random() * 100}%`,
-                    left: `${Math.random() * 100}%`,
-                    transform: 'rotate(90deg)',
-                    fontFamily: 'monospace',
-                    color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'
-                }}
-                >
-                {Array.from({length: 15}).map(() => Math.round(Math.random())).join('')}
-                </div>
-            ))}
-            </div>
+          {Array.from({length: 6}).map((_, i) => (
+            <motion.div 
+              key={`binary-${i}`}
+              className="absolute text-xs"
+              animate={{
+                y: [0, 200, 400, 600, 800, 1000], 
+                opacity: [0, 0.6, 0.6, 0.6, 0.6, 0]
+              }}
+              transition={{
+                y: { duration: 10 + i * 3, ease: "linear", repeat: Infinity },
+                opacity: { duration: 20 + i * 3, ease: "linear", repeat: Infinity }
+              }}
+              style={{
+                top: `-100px`,
+                left: `${15 + i * 25}%`,
+                fontFamily: 'monospace',
+                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'
+              }}
+            >
+              {Array.from({length: 12}).map(() => Math.round(Math.random())).join('')}
+            </motion.div>
+          ))}
+        </div>
         
         {/* Accent glow for dark mode */}
         {isDark && (
@@ -312,7 +319,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                   </svg>
                 </div>
               </a>
-              
+
               {/* LinkedIn */}
               <a
                 href={portfolioConfig.personal.socialLinks.linkedin}

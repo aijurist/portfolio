@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"; 
 import { Navbar } from "./components/ui/Navbar"; 
-import HeroSection from './components/sections/Hero';  
+import HeroSection from './components/sections/Hero'; 
+import Contact from './components/sections/Contact' 
+import AboutSection from "./components/sections/About";
 
 const App: React.FC = () => {   
   const [isDark, setIsDark] = useState(() => {     
@@ -46,6 +48,9 @@ const App: React.FC = () => {
         toggleTheme={toggleTheme} 
       />       
       <HeroSection theme={theme} />
+      <AboutSection theme={theme} />
+      <Contact theme={theme} />
+      {/* <HeroSection theme={theme} /> */}
       {/* Add other sections here */}
     </div>   
   ); 

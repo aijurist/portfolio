@@ -11,6 +11,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
   // State for dynamic background
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
+  // State to check if the device has a fine pointer (e.g., mouse)
+  const [hasFinePointer, setHasFinePointer] = useState(
+    window.matchMedia('(pointer: fine)').matches
+  );
+  
   // Track mouse position for dynamic background
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -23,6 +28,19 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Check for fine pointer support and update on changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(pointer: fine)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setHasFinePointer(e.matches);
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleChange);
     };
   }, []);
 
@@ -86,7 +104,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
         isDark ? 'bg-black' : 'bg-white'
       }`}
     >
-      <CustomCursor theme={theme} />
+      {hasFinePointer && <CustomCursor theme={theme} />}
       
       {/* AI-themed background */}
       <div className="absolute inset-0 z-0">
@@ -151,22 +169,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
         </svg>
         
         {/* Binary code effect (subtle) */}
-        <div className="absolute inset-0 select-none pointer-events-none">
-          {Array.from({length: 8}).map((_, i) => (
-            <div 
-              key={`binary-${i}`}
-              className={`absolute text-xs opacity-5 ${isDark ? 'text-white' : 'text-black'}`}
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                transform: 'rotate(90deg)',
-                fontFamily: 'monospace'
-              }}
-            >
-              {Array.from({length: 15}).map(() => Math.round(Math.random())).join('')}
+        <div className="absolute inset-0 select-none pointer-events-none hidden lg:block">
+            {Array.from({length: 8}).map((_, i) => (
+                <div 
+                key={`binary-${i}`}
+                className="absolute text-xs"
+                style={{
+                    top: `${Math.random() * 100}%`,
+                    left: `${Math.random() * 100}%`,
+                    transform: 'rotate(90deg)',
+                    fontFamily: 'monospace',
+                    color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'
+                }}
+                >
+                {Array.from({length: 15}).map(() => Math.round(Math.random())).join('')}
+                </div>
+            ))}
             </div>
-          ))}
-        </div>
         
         {/* Accent glow for dark mode */}
         {isDark && (
@@ -199,7 +218,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
             {/* Greeting */}
             <motion.div variants={itemVariants} className="overflow-hidden">
               <span 
-                className={`inline-block font-mono text-sm mb-2 ${
+                className={`inline-block font-mono text-xl mb-2 ${
                   isDark ? 'text-green-400' : 'text-green-600'
                 } tracking-wide`}
               >
@@ -237,7 +256,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="px-7 py-2.5 rounded-full font-medium text-sm bg-white text-black transition-all duration-300 hover:shadow-lg font-dm"
+                className={`px-7 py-2.5 rounded-full font-medium text-sm border transition-all duration-300 
+                    ${theme === 'dark' ? 'border-white/30 text-white/90 hover:border-white/50' : 'border-black/30 text-black/90 hover:border-black/50'}
+                    font-dm`}
               >
                 Explore My Work
               </motion.a>
@@ -247,12 +268,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="px-7 py-2.5 rounded-full font-medium text-sm border border-white/30 text-white/90 transition-all duration-300 hover:border-white/50 font-dm"
+                className={`px-7 py-2.5 rounded-full font-medium text-sm border transition-all duration-300 
+                    ${theme === 'dark' ? 'border-white/30 text-white/90 hover:border-white/50' : 'border-black/30 text-black/90 hover:border-black/50'}
+                    font-dm`}
                 target="_blank"
                 rel="noopener noreferrer"
-              >
+                >
                 Resume
-              </motion.a>
+                </motion.a>
+
             </motion.div>
 
             {/* Social links */}

@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Sirin+Stencil&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Stick+No+Bills:wght@200..800&display=swap');
+@import "tailwindcss";
+
+/* Custom styles */
+body {
+  @apply bg-white dark:bg-black text-black dark:text-white;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Font classes */
+.font-dm {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.font-sirin {
+  font-family: 'Stick No Bills', sans-serif;
+}

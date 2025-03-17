@@ -94,7 +94,7 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
   return (
     <section
       id="contact"
-      className={`w-full py-24 lg:py-32 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}
+      className={`w-full py-10 lg:py-20 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}
     >
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
         <motion.div 
@@ -182,7 +182,7 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
                     onChange={handleChange}
                     rows={6}
                     required
-                    className={`w-full px-4 py-3 rounded-lg ${
+                    className={`w-full h-[125px] px-4 py-3 rounded-lg ${
                       isDark 
                         ? 'bg-white/5 border border-white/10 text-white focus:border-green-500' 
                         : 'bg-black/5 border border-black/10 text-black focus:border-green-600'
@@ -230,7 +230,7 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
                   Contact Information
                 </h3>
                 <p className={`text-sm mb-6 ${isDark ? 'text-white/70' : 'text-black/70'}`}>
-                  Prefer to reach out directly? Here's how you can contact me.
+                  {portfolioConfig.contact.message}
                 </p>
               </div>
               

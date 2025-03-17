@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThemeToggle } from "../ui/ThemeToggle"; // Import the ThemeToggle component
+import { ThemeToggle } from "../ui/ThemeToggle";
+import portfolioConfig from "../../config/portfolio-config";
 
 const navItems = [
   { name: "Home", href: "#" },
@@ -11,7 +12,7 @@ const navItems = [
 
 interface NavbarProps {
   isScrolled: boolean;
-  theme: string; // Changed from isDark: boolean to theme: string
+  theme: string;
   toggleTheme: () => void;
 }
 
@@ -47,8 +48,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     width: 0,
     opacity: 0,
   });
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const isDark = theme === 'dark';
 
   return (
     <>
@@ -62,8 +65,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Desktop Menu */}
         <div
           className={`hidden sm:block ${
-            theme === "dark" ? "bg-black dark:bg-black" : "bg-white dark:bg-white"
-          } ${isScrolled ? "shadow-md" : ""} px-6 py-3 backdrop-blur-md rounded-full`}
+            isDark ? "bg-black/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md"
+          } ${isScrolled ? "shadow-md" : ""} px-6 py-3 rounded-full transition-all duration-300`}
         >
           <ul
             className="flex items-center justify-center space-x-2 relative"
@@ -73,10 +76,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 width: 0,
                 opacity: 0,
               });
+              setHoveredItem(null);
             }}
           >
             {navItems.map((item) => (
-              <Tab key={item.name} setPosition={setPosition} href={item.href} theme={theme}>
+              <Tab 
+                key={item.name} 
+                setPosition={setPosition} 
+                href={item.href} 
+                theme={theme}
+                isHovered={hoveredItem === item.name}
+                onHover={() => setHoveredItem(item.name)}
+              >
                 {item.name}
               </Tab>
             ))}
@@ -89,15 +100,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               transition={{ duration: 0.3 }}
             >
               <a
-                href="mailto:career@spike.codes"
+                href={`mailto:${portfolioConfig.personal.email}`}
                 className={`inline-block ${
-                  theme === "dark" ? "bg-white text-black" : "bg-black text-white"
-                } px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap hover:bg-opacity-90 transition-colors cursor-none`}
+                  isDark ? "bg-white text-black" : "bg-black text-white"
+                } px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap hover:bg-opacity-90 transition-colors`}
               >
                 Contact
               </a>
             </motion.li>
-            <Cursor position={position} />
+            <Cursor position={position} theme={theme} />
           </ul>
         </div>
       </motion.nav>
@@ -107,14 +118,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="relative flex justify-center">
           <div
             className={`absolute bottom-0 left-0 right-0 h-20 ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } bg-opacity-50 dark:bg-opacity-50 backdrop-blur-md rounded-t-3xl shadow-lg`} // Adjusted opacity to 50%
+              isDark ? "bg-zinc-900/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md"
+            } rounded-t-3xl shadow-lg transition-all duration-300`}
           ></div>
           <button
             onClick={toggleMenu}
             className={`relative z-10 w-14 h-14 rounded-full ${
-              theme === "dark" ? "bg-white text-black" : "bg-black text-white"
-            } flex items-center justify-center shadow-lg mb-3 bg-opacity-75`}
+              isDark ? "bg-white text-black" : "bg-black text-white"
+            } flex items-center justify-center shadow-lg mb-3`}
           >
             <MenuIcon isOpen={isMenuOpen} />
           </button>
@@ -130,8 +141,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             exit={{ opacity: 0, y: "100%" }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className={`sm:hidden fixed bottom-24 left-4 right-4 ${
-              theme === "dark" ? "bg-black" : "bg-white"
-            } bg-opacity-50 dark:bg-opacity-50 backdrop-blur-md rounded-3xl shadow-lg overflow-hidden z-40`} // Adjusted opacity to 50%
+              isDark ? "bg-zinc-900/90 backdrop-blur-md" : "bg-white/90 backdrop-blur-md"
+            } rounded-3xl shadow-lg overflow-hidden z-40 transition-all duration-300`}
           >
             <ul className="py-4">
               {navItems.map((item) => (
@@ -139,8 +150,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <a
                     href={item.href}
                     className={`block px-6 py-3 text-lg font-medium transition-colors ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    } hover:bg-gray-100 dark:hover:bg-gray-800`}
+                      isDark ? "text-white hover:bg-white/10" : "text-black hover:bg-black/5"
+                    }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
@@ -148,14 +159,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </li>
               ))}
               <li className="px-6 pt-2 pb-4">
-                <button
-                  className={`w-full px-4 py-3 text-lg font-medium ${
-                    theme === "dark" ? "bg-white text-black" : "bg-black text-white"
+                <a
+                  href="mailto:career@spike.codes"
+                  className={`block w-full px-4 py-3 text-lg font-medium text-center ${
+                    isDark ? "bg-white text-black" : "bg-black text-white"
                   } hover:bg-opacity-90 transition-colors rounded-full`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact
-                </button>
+                </a>
               </li>
             </ul>
           </motion.div>
@@ -168,26 +180,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
-// Add these interfaces
 interface TabProps {
   children: React.ReactNode;
   setPosition: (position: { left: number; width: number; opacity: number }) => void;
   href: string;
+  theme: string;
+  isHovered: boolean;
+  onHover: () => void;
 }
 
-interface CursorProps {
-  position: { left: number; width: number; opacity: number };
-}
-
-interface TabProps {
-  children: React.ReactNode;
-  setPosition: (position: { left: number; width: number; opacity: number }) => void;
-  href: string;
-  theme: string; // Add theme prop
-}
-
-const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme }) => {
+const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme, onHover }) => {
   const ref = useRef<HTMLLIElement>(null);
+  const isDark = theme === 'dark';
 
   return (
     <li
@@ -196,18 +200,19 @@ const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme }) => {
         if (!ref?.current) return;
         const { width } = ref.current.getBoundingClientRect();
         setPosition({
-          left: ref.current.offsetLeft - 8,
-          width,
+          left: ref.current.offsetLeft,
+          width: width,
           opacity: 1,
         });
+        onHover();
       }}
       className="relative z-10"
     >
       <a
         href={href}
         className={`block px-4 py-2 rounded-full text-md font-medium transition-colors ${
-          theme === "dark" ? "text-white" : "text-black"
-        } hover:bg-gray-100 dark:hover:bg-gray-800 cursor-none`}
+          isDark ? "text-white" : "text-black"
+        }`}
       >
         {children}
       </a>
@@ -215,13 +220,26 @@ const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme }) => {
   );
 };
 
-const Cursor: React.FC<CursorProps> = ({ position }) => {
+interface CursorProps {
+  position: { left: number; width: number; opacity: number };
+  theme: string;
+}
+
+const Cursor: React.FC<CursorProps> = ({ position, theme }) => {
+  const isDark = theme === 'dark';
+  
   return (
-    <motion.li
-      animate={{
-        ...position,
+    <motion.div
+      animate={position}
+      initial={{ opacity: 0 }}
+      className={`absolute z-0 h-8 rounded-full ${
+        isDark ? "bg-white/10" : "bg-black/5"
+      } transition-colors`}
+      style={{
+        width: position.width,
+        left: position.left,
+        opacity: position.opacity,
       }}
-      className="absolute z-0 h-full rounded-full bg-gray-200 dark:bg-gray-800"
     />
   );
 };

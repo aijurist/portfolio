@@ -232,13 +232,15 @@ ${portfolioConfig.about.description}`;
             variants={itemVariants}
             className="w-full lg:w-7/12"
           >
-            <CodePanel
-              code={pythonCode}
-              output={outputContent}
-              theme={theme}
-              typingSpeed={20}
-              language="python"
-            />
+            {['dark', 'light'].includes(theme) && (
+              <CodePanel
+                code={pythonCode}
+                output={outputContent}
+                theme={theme as 'dark' | 'light'}
+                typingSpeed={20}
+                language="python"
+              />
+            )}
           </motion.div>
         </motion.div>
       </div>

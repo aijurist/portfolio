@@ -19,25 +19,59 @@ const CustomCursor: React.FC<CustomCursorProps> = () => {
     const handleMouseDown = () => setIsActive(true);
     const handleMouseUp = () => setIsActive(false);
 
-    const handlePointerDetection = () => {
-      const hoveredElement = document.elementFromPoint(position.x, position.y);
-      const isInteractive = hoveredElement?.matches(
-        'button, a, input, [role="button"], [data-clickable]'
-      );
-      setIsPointer(!!isInteractive);
+    // More reliable way to detect interactive elements
+    const handleElementDetection = () => {
+      const element = document.elementFromPoint(position.x, position.y);
+      if (!element) return;
+      
+      // Check if the element or any of its parents are interactive
+      const isInteractive = (e: Element | null): boolean => {
+        if (!e) return false;
+        if (e.tagName === 'BUTTON' || 
+            e.tagName === 'A' || 
+            e.tagName === 'INPUT' || 
+            e.getAttribute('role') === 'button' || 
+            e.hasAttribute('data-clickable')) {
+          return true;
+        }
+        return isInteractive(e.parentElement);
+      };
+      
+      setIsPointer(isInteractive(element));
     };
 
+    // Throttled version of the handler to improve performance
+    let lastRun = 0;
+    const throttledHandler = () => {
+      const now = Date.now();
+      if (now - lastRun > 50) { // Run at most every 50ms
+        handleElementDetection();
+        lastRun = now;
+      }
+    };
+
+    // Disable ALL cursors on the entire page
     document.body.style.cursor = 'none';
     
+    // Also hide cursor on all interactive elements
+    const style = document.createElement('style');
+    style.textContent = `
+      a, button, input, [role="button"], [data-clickable] {
+        cursor: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousemove', handlePointerDetection);
+    window.addEventListener('mousemove', throttledHandler);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       document.body.style.cursor = '';
+      document.head.removeChild(style);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousemove', handlePointerDetection);
+      window.removeEventListener('mousemove', throttledHandler);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
     };
@@ -75,17 +109,6 @@ const CustomCursor: React.FC<CustomCursorProps> = () => {
             stroke="white"
             strokeWidth="1.2"
           />
-          {/* {isPointer && (
-            <motion.path
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.2 }}
-              d="M18 24L22 28L30 20"
-              stroke="white"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-            />
-          )} */}
         </svg>
       </motion.div>
       

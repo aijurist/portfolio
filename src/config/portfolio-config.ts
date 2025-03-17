@@ -92,7 +92,6 @@ const portfolioConfig = {
         ]
       }
     ],
-    // Added experience array format needed by AboutSection
     0: {
       company: "XYZ AI Labs",
       role: "AI Research Intern",

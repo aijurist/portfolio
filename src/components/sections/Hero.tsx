@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import portfolioConfig from '../../config/portfolio-config';
-import CustomCursor from '../ui/CustomCursor';
+// import CustomCursor from '../ui/CustomCursor';
 
 interface HeroSectionProps {
   theme: string;
@@ -12,9 +12,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
   // State to check if the device has a fine pointer (e.g., mouse)
-  const [hasFinePointer, setHasFinePointer] = useState(
-    window.matchMedia('(pointer: fine)').matches
-  );
+  // const [hasFinePointer, setHasFinePointer] = useState(
+  //   window.matchMedia('(pointer: fine)').matches
+  // );
   
   // Track mouse position for dynamic background
   useEffect(() => {
@@ -32,17 +32,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
   }, []);
 
   // Check for fine pointer support and update on changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(pointer: fine)');
-    const handleChange = (e: MediaQueryListEvent) => {
-      setHasFinePointer(e.matches);
-    };
+  // useEffect(() => {
+  //   const mediaQuery = window.matchMedia('(pointer: fine)');
+  //   const handleChange = (e: MediaQueryListEvent) => {
+  //     setHasFinePointer(e.matches);
+  //   };
     
-    mediaQuery.addEventListener('change', handleChange);
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
+  //   mediaQuery.addEventListener('change', handleChange);
+  //   return () => {
+  //     mediaQuery.removeEventListener('change', handleChange);
+  //   };
+  // }, []);
 
   // Animation variants
   const containerVariants = {
@@ -104,7 +104,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
         isDark ? 'bg-black' : 'bg-white'
       }`}
     >
-      {hasFinePointer && <CustomCursor theme={theme} />}
+      {/* {hasFinePointer && <CustomCursor theme={theme} />} */}
       
       {/* AI-themed background */}
       <div className="absolute inset-0 z-0">

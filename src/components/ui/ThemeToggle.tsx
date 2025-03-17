@@ -11,7 +11,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   theme,
   toggleTheme,
 }) => {
-  const isDark = theme === 'dark'; // Derive boolean from string
+  const isDark = theme === 'dark';
 
   return (
     <motion.button

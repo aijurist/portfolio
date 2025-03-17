@@ -5,6 +5,7 @@ import Contact from './components/sections/Contact';
 import AboutSection from "./components/sections/About";
 import SkillsSection from "./components/sections/Skills";
 import CustomCursor from "./components/ui/CustomCursor";
+import Footer from "./components/sections/Footer";
 
 const App: React.FC = () => {
     const [isDark, setIsDark] = useState(() => {
@@ -69,6 +70,7 @@ const App: React.FC = () => {
             <AboutSection theme={theme} />
             <SkillsSection theme={theme} />
             <Contact theme={theme} />
+            <Footer theme={theme} />
         </div>
     );
 };

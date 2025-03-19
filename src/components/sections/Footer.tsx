@@ -31,7 +31,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
               </p>
               <p className="text-xs opacity-70">
                 Built with <a href="https://react.dev/" className="underline">React</a> and 
-                <a href="https://tailwindcss.com/" className="underline mx-1">Tailwind</a>
+                <a href="https://tailwindcss.com/" className="underline mx-1">Tailwind.</a>
                 Source available on <a href={portfolioConfig.personal.socialLinks.github} className="underline">GitHub</a>.
               </p>
             </div>

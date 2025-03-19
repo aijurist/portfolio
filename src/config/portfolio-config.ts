@@ -24,7 +24,7 @@ const portfolioConfig = {
   about: {
     heading: "About Me",
     paragraphs: [
-      "I'm a third-year Computer Science Engineering student at Rajalakshmi Engineering College with a strong focus on Artificial Intelligence and Machine Learning. My expertise lies in developing and optimizing Generative AI models, building intelligent agents, and creating modular AI solutions.",
+      "Third year Computer Science Student at Rajalakshmi Engineering College working on Generative AI and AI Agents",
       "With a passion for innovation, I combine technical knowledge with practical implementation to solve complex problems. I'm constantly exploring new AI technologies and methodologies to push the boundaries of what's possible in the field.",
     ],
     skills: ["GenAI", "Machine Learning", "AI Agents", "Python", "Full Stack Development", "LLM Integration"],
@@ -142,7 +142,7 @@ const portfolioConfig = {
 
   github: {
     username: "aijurist",
-    token: "process.env.REACT_APP_GITHUB_TOKEN",
+    token: "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",
     featuredRepos: 4,
     showLanguages: true,
     showContributions: true

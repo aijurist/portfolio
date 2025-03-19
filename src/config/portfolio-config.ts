@@ -7,7 +7,7 @@ const portfolioConfig = {
     location: "Chennai, Tamil Nadu, India",
     email: "shanthosh811@gmail.com",
     profilePicture: "/assets/images/profile.jpg", // Add your profile picture to this path
-    resumeLink: "https://drive.google.com/file/d/1nw2-_B2YjbeTLM7ef0SN31pdZTSoa331/view?usp=sharing",
+    resumeLink: "https://drive.google.com/file/d/1xUqQexwx6uWGUsiKlwcbKXRF6ZBmh38J/view?usp=sharing",
     socialLinks: {
       github: "https://github.com/aijurist",
       linkedin: "https://www.linkedin.com/in/shanthosh-s-3a1930257/",

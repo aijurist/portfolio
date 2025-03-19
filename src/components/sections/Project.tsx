@@ -19,7 +19,6 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ theme }) => {
   const [projects, setProjects] = useState<GitHubProject[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAll, setShowAll] = useState<boolean>(false);
   
   const isDark = theme === 'dark';
   
@@ -101,8 +100,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ theme }) => {
     },
   };
 
-  const displayedProjects = showAll ? projects : projects.slice(0, 4);
-
+  const displayedProjects = projects.slice(0, 4);
   return (
     <section
       id="projects"

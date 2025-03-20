@@ -1,48 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import portfolioConfig from '../../config/portfolio-config';
-// import CustomCursor from '../ui/CustomCursor';
+import HeroBackground from '../ui/HeroBackground';
 
 interface HeroSectionProps {
   theme: string;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
-  // State for dynamic background
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  // State to check if the device has a fine pointer (e.g., mouse)
-  // const [hasFinePointer, setHasFinePointer] = useState(
-  //   window.matchMedia('(pointer: fine)').matches
-  // );
-  
-  // Track mouse position for dynamic background
+  const mousePosRef = useRef(mousePosition);
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
+    const updatePosition = (e: MouseEvent) => {
+      mousePosRef.current = {
         x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
+        y: e.clientY / window.innerHeight
+      };
     };
-    
-    window.addEventListener('mousemove', handleMouseMove);
+
+    const updateStore = () => {
+      setMousePosition(mousePosRef.current);
+    };
+
+    const mouseMoveListener = (e: MouseEvent) => updatePosition(e);
+    const interval = setInterval(updateStore, 100);
+
+    window.addEventListener('mousemove', mouseMoveListener);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', mouseMoveListener);
+      clearInterval(interval);
     };
   }, []);
-
-  // Check for fine pointer support and update on changes
-  // useEffect(() => {
-  //   const mediaQuery = window.matchMedia('(pointer: fine)');
-  //   const handleChange = (e: MediaQueryListEvent) => {
-  //     setHasFinePointer(e.matches);
-  //   };
-    
-  //   mediaQuery.addEventListener('change', handleChange);
-  //   return () => {
-  //     mediaQuery.removeEventListener('change', handleChange);
-  //   };
-  // }, []);
 
   // Animation variants
   const containerVariants = {
@@ -77,25 +66,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
   };
 
   const isDark = theme === 'dark';
-  
-  // Generate neural network point coordinates
-  const [networkPoints, setNetworkPoints] = useState<{x: number, y: number}[]>([]);
-
-  useEffect(() => {
-    // Generate network points
-    const points = [];
-    for (let i = 0; i < 40; i++) {
-      points.push({
-        x: Math.random() * 100,
-        y: Math.random() * 100
-      });
-    }
-    setNetworkPoints(points);
-  }, []);
-
-  // Calculate dynamic glow position based on mouse movement
-  const glowPositionX = 30 + mousePosition.x * 40; // 30-70% range
-  const glowPositionY = 30 + mousePosition.y * 40; // 30-70% range
 
   return (
     <section
@@ -104,116 +74,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
         isDark ? 'bg-black' : 'bg-white'
       }`}
     >
-      {/* {hasFinePointer && <CustomCursor theme={theme} />} */}
-      
       {/* AI-themed background */}
-      <div className="absolute inset-0 z-0">
-        {/* Base grid pattern */}
-        <div 
-          className={`h-full w-full ${
-            isDark 
-              ? 'bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]' 
-              : 'bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)]'
-          }`}
-          style={{
-            backgroundSize: '30px 30px',
-            backgroundPosition: `${mousePosition.x * 10}px ${mousePosition.y * 10}px`,
-            transition: 'background-position 0.1s ease-out',
-          }}
-        />
-        
-        {/* Neural network nodes and connections */}
-        <svg 
-          className="absolute inset-0 w-full h-full opacity-20"
-          style={{
-            transform: `translate(${(mousePosition.x - 0.5) * 5}px, ${(mousePosition.y - 0.5) * 5}px)`,
-            transition: 'transform 0.2s ease-out'
-          }}
-        >
-          {/* Nodes */}
-          {networkPoints.map((point, index) => (
-            <circle 
-              key={`node-${index}`} 
-              cx={`${point.x}%`} 
-              cy={`${point.y}%`} 
-              r="1.5"
-              className={isDark ? "fill-white/30" : "fill-black/20"}
-            />
-          ))}
-          
-          {/* Connections between nodes */}
-          {networkPoints.map((point, i) => 
-            networkPoints.slice(i+1, i+4).map((connectedPoint, j) => {
-              const distance = Math.sqrt(
-                Math.pow(point.x - connectedPoint.x, 2) + 
-                Math.pow(point.y - connectedPoint.y, 2)
-              );
-              
-              // Only draw connections if points are close enough
-              if (distance < 20) {
-                return (
-                  <line 
-                    key={`line-${i}-${j}`} 
-                    x1={`${point.x}%`} 
-                    y1={`${point.y}%`} 
-                    x2={`${connectedPoint.x}%`} 
-                    y2={`${connectedPoint.y}%`} 
-                    className={isDark ? "stroke-white/10" : "stroke-black/10"} 
-                    strokeWidth="0.5" 
-                  />
-                );
-              }
-              return null;
-            })
-          )}
-        </svg>
-        
-        {/* UPDATED: Binary code effect (reduced, animated and more subtle) */}
-        <div className="absolute inset-0 select-none pointer-events-none hidden lg:block">
-          {Array.from({length: 6}).map((_, i) => (
-            <motion.div 
-              key={`binary-${i}`}
-              className="absolute text-xs"
-              animate={{
-                y: [0, 200, 400, 600, 800, 1000], 
-                opacity: [0, 0.6, 0.6, 0.6, 0.6, 0]
-              }}
-              transition={{
-                y: { duration: 10 + i * 3, ease: "linear", repeat: Infinity },
-                opacity: { duration: 20 + i * 3, ease: "linear", repeat: Infinity }
-              }}
-              style={{
-                top: `-100px`,
-                left: `${15 + i * 25}%`,
-                fontFamily: 'monospace',
-                color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'
-              }}
-            >
-              {Array.from({length: 12}).map(() => Math.round(Math.random())).join('')}
-            </motion.div>
-          ))}
-        </div>
-        
-        {/* Accent glow for dark mode */}
-        {isDark && (
-          <div 
-            className="absolute inset-0 opacity-20 transition-all duration-300"
-            style={{ transform: `translate(${(mousePosition.x - 0.5) * 10}px, ${(mousePosition.y - 0.5) * 10}px)` }}
-          >
-            <div 
-              className="absolute bg-green-500 rounded-full blur-[150px]"
-              style={{ 
-                width: '35%', 
-                height: '35%',
-                left: `${glowPositionX}%`,
-                top: `${glowPositionY}%`,
-              }} 
-            />
-          </div>
-        )}
-      </div>
+      <HeroBackground isDark={isDark} mousePosition={mousePosition} />
 
-      {/* Main content - Improved container sizing for different screens */}
+      {/* Main content */}
       <div className="container px-4 sm:px-6 lg:px-8 z-10 pt-16 md:pt-20 w-full">
         <div className="flex flex-col md:max-w-lg lg:max-w-2xl xl:max-w-3xl mx-auto md:mx-0 md:ml-12 lg:ml-20 xl:ml-28 my-8">
           <motion.div
@@ -283,7 +147,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                 >
                 Resume
                 </motion.a>
-
             </motion.div>
 
             {/* Social links */}

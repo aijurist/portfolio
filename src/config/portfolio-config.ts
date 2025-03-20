@@ -142,7 +142,7 @@ const portfolioConfig = {
 
   github: {
     username: "aijurist",
-    token: "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",
+    token: import.meta.env.VITE_GITHUB_TOKEN || "",
     featuredRepos: 4,
     showLanguages: true,
     showContributions: true

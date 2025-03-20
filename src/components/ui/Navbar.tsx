@@ -14,6 +14,7 @@ interface NavbarProps {
   isScrolled: boolean;
   theme: string;
   toggleTheme: () => void;
+  isMobile?: boolean; // Added isMobile prop
 }
 
 const MenuIcon = ({ isOpen }: { isOpen: boolean }) => (
@@ -41,6 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isScrolled,
   theme,
   toggleTheme,
+  isMobile = false, // Default to false if not provided
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [position, setPosition] = useState({
@@ -71,6 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <ul
             className="flex items-center justify-center space-x-2 relative"
             onMouseLeave={() => {
+              // Skip hover effects on mobile
+              if (isMobile) return;
               setPosition({
                 left: 0,
                 width: 0,
@@ -87,6 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 theme={theme}
                 isHovered={hoveredItem === item.name}
                 onHover={() => setHoveredItem(item.name)}
+                isMobile={isMobile}
               >
                 {item.name}
               </Tab>
@@ -108,7 +113,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Contact
               </a>
             </motion.li>
-            <Cursor position={position} theme={theme} />
+            {/* Only show cursor effect on non-mobile */}
+            {!isMobile && <Cursor position={position} theme={theme} />}
           </ul>
         </div>
       </motion.nav>
@@ -160,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ))}
               <li className="px-6 pt-2 pb-4">
                 <a
-                  href="mailto:career@spike.codes"
+                  href={`mailto:${portfolioConfig.personal.email}`}
                   className={`block w-full px-4 py-3 text-lg font-medium text-center ${
                     isDark ? "bg-white text-black" : "bg-black text-white"
                   } hover:bg-opacity-90 transition-colors rounded-full`}
@@ -187,9 +193,17 @@ interface TabProps {
   theme: string;
   isHovered: boolean;
   onHover: () => void;
+  isMobile?: boolean; // Added isMobile prop
 }
 
-const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme, onHover }) => {
+const Tab: React.FC<TabProps> = ({ 
+  children, 
+  setPosition, 
+  href, 
+  theme, 
+  onHover, 
+  isMobile = false 
+}) => {
   const ref = useRef<HTMLLIElement>(null);
   const isDark = theme === 'dark';
 
@@ -197,6 +211,8 @@ const Tab: React.FC<TabProps> = ({ children, setPosition, href, theme, onHover }
     <li
       ref={ref}
       onMouseEnter={() => {
+        // Skip hover effects on mobile
+        if (isMobile) return;
         if (!ref?.current) return;
         const { width } = ref.current.getBoundingClientRect();
         setPosition({

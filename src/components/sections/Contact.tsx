@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import portfolioConfig from '../../config/portfolio-config';
@@ -31,13 +30,32 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    // Google Sheets script URL - this comes from your Google Sheets setup
+    const scriptURL = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
+    
+    // Add timestamp to form data
+    const formDataWithTimestamp = {
+      ...formData,
+      timestamp: new Date().toISOString(),
+    };
+
     try {
-      // Simulating form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Create FormData object for submission
+      const formDataObj = new FormData();
       
-      // Replace this with actual form submission logic
-      console.log('Form submitted:', formData);
+      // Add form values to FormData object
+      Object.entries(formDataWithTimestamp).forEach(([key, value]) => {
+        formDataObj.append(key, value as string);
+      });
       
+      // Submit the form using fetch
+      await fetch(scriptURL, {
+        method: 'POST',
+        body: formDataObj,
+        mode: 'no-cors', // This is important for CORS issues
+      });
+      
+      // Since no-cors mode doesn't return readable response, we assume success
       setSubmitStatus({
         success: true,
         message: 'Thank you! Your message has been sent successfully.',
@@ -46,6 +64,7 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
       // Reset form
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
+      console.error('Error submitting form:', error);
       setSubmitStatus({
         success: false,
         message: 'Something went wrong. Please try again later.',

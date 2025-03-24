@@ -97,7 +97,7 @@ const App: React.FC = () => {
             {/* Only render cursor on desktop devices with mouse */}
             {hasFinePointer && !isMobile && (
                 <Suspense fallback={null}>
-                    <CustomCursor theme={theme} />
+                    <CustomCursor theme={theme}/>
                 </Suspense>
             )}
             

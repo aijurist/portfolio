@@ -14,7 +14,7 @@ export const CursorRing: React.FC<CursorRingProps> = memo(({ theme }) => {
   
   return (
     <motion.div
-      className={`fixed pointer-events-none z-50 h-8 w-8 rounded-full border-2 ${
+      className={`fixed pointer-events-none z-50 h-8 w-8 rounded-full border-2 z-100 ${
         isDark ? 'border-white' : 'border-black'
       } ${isActive ? 'opacity-80' : 'opacity-50'}`}
       style={{
